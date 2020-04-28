@@ -105,6 +105,12 @@ class App extends Component {
       .catch(err => console.log(err))  
   }
 
+  onEnter = (e) => {
+    if(e.which === 13) {
+        this.onPictureSubmit()
+    }
+  }
+
   onRouteChange = (route) => {
     if (route === 'signout') {
       this.setState(initialState)
@@ -128,7 +134,8 @@ class App extends Component {
               <Rank name={this.state.user.name} entries={this.state.user.entries} />
               <ImageLinkForm 
                 onInputChange={this.onInputChange} 
-                onPictureSubmit={this.onPictureSubmit}/>
+                onPictureSubmit={this.onPictureSubmit}
+                onEnter={this.onEnter}/>
               <FaceRecognition box={box} imageUrl={imageUrl}/>
             </Fragment>
           : (
