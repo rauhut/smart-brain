@@ -7,6 +7,10 @@
   justify-content: center;
 }
 
+.container {
+  background-color: #295d8a;
+}
+
 .particles {
   position: fixed;
   top: 0;
