@@ -6,7 +6,8 @@ class Register extends React.Component {
         this.state = {
             email: '',
             password: '',
-            name: ''
+            name: '',
+            isLoading: false
         }
     }
 
@@ -23,6 +24,7 @@ class Register extends React.Component {
     }
 
     onSubmitRegister = () => {
+        this.setState({ isLoading : true })
         fetch('https://tranquil-dawn-70394.herokuapp.com/register', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -32,13 +34,22 @@ class Register extends React.Component {
                 name: this.state.name
             })
         })
-            .then(response => response.json())
-            .then(user => {
-                if (user.id) {
-                    this.props.loadUser(user)
-                    this.props.onRouteChange('home')
-                }
-            })
+        .then((response) => {
+            if (response.ok) {
+                return response.json()
+            } else {
+                throw new Error('Something went wrong when trying to register')
+            }
+        })
+        .then(user => {
+            if (user.id) {
+                this.props.loadUser(user)
+                this.props.onRouteChange('home')
+            }
+        })
+        .catch((error) => {
+            this.setState({isLoading : false})
+        })
     }
 
     onEnter = (e) => {
@@ -83,11 +94,12 @@ class Register extends React.Component {
                         </div>
                         </fieldset>
                         <div className="">
-                            <input 
+                            <button  
                                 onClick={this.onSubmitRegister}
-                                className="b ph3 pv2 input-reset ba b--black white-70 bg-transparent grow pointer f6 dib bg-navy" 
-                                type="submit" 
-                                value="Register" />
+                                className="b ph3 pv2 input-reset ba b--black white-70 bg-transparent grow pointer f6 dib bg-navy">
+                                    { !this.state.isLoading && <span>Register</span> }
+                                    { this.state.isLoading && <span>Registering...</span>}
+                            </button>
                         </div>
                     </div>
                 </main>
