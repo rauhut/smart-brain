@@ -5,7 +5,8 @@ class SignIn extends React.Component {
         super(props)
         this.state = {
             signInEmail: '',
-            signInPassword: ''
+            signInPassword: '',
+            isLoading: false
         }
     }
     
@@ -18,6 +19,7 @@ class SignIn extends React.Component {
     }
 
     onSubmitSignIn = () => {
+        this.setState({ isLoading : true })
         fetch('https://tranquil-dawn-70394.herokuapp.com/signin', {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
@@ -26,13 +28,22 @@ class SignIn extends React.Component {
                 password: this.state.signInPassword
             })
         })
-            .then(response => response.json())
-            .then(user => {
-                if (user.id) {
-                    this.props.loadUser(user)
-                    this.props.onRouteChange('home')
-                }
-            })
+        .then((response) => {
+            if(response.ok) {
+                return response.json()
+            } else {
+                throw new Error('Something went wrong when trying to login')
+            }
+        })
+        .then(user => {
+            if (user.id) {
+                this.props.loadUser(user)
+                this.props.onRouteChange('home')
+            }
+        })
+        .catch((error) => {
+            this.setState({isLoading : false})
+        })
     }
 
     onEnter = (e) => {
@@ -71,11 +82,12 @@ class SignIn extends React.Component {
                         </div>
                         </fieldset>
                         <div className="">
-                            <input 
+                            <button 
                                 onClick={this.onSubmitSignIn}
-                                className="b ph3 pv2 input-reset ba b--black white-70 grow pointer f6 dib bg-navy" 
-                                type="submit" 
-                                value="Sign in" />
+                                className="b ph3 pv2 input-reset ba b--black white-70 grow pointer f6 dib bg-navy">
+                                    { !this.state.isLoading && <span>Sign In</span> }
+                                    { this.state.isLoading && <span>Signing In...</span>}
+                            </button>
                         </div>
                         <div className="lh-copy mt3">
                             <p onClick={() => onRouteChange('register')} className="f6 link white-70 db pointer">Register</p>
