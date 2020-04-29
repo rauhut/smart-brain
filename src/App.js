@@ -67,7 +67,6 @@ class App extends Component {
   }
 
   displayFaceBox = (box) => {
-    console.log(box)
     this.setState({box: box})
   }
 
@@ -84,24 +83,28 @@ class App extends Component {
           input: this.state.input
         })
       })
-      .then(response => response.json())
-      .then(response => {
-        if (response) {
-          fetch('https://tranquil-dawn-70394.herokuapp.com/image', {
-            method: 'put',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              id: this.state.user.id
-            })
+      .then(response =>  {
+        if (response.ok) {
+          return response.json()
+            .then(response => {
+              if (response) {
+                fetch('https://tranquil-dawn-70394.herokuapp.com/image', {
+                  method: 'put',
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({
+                    id: this.state.user.id
+                  })
+                })
+                .then(response => response.json())
+                .then(count => {
+                  this.setState(Object.assign(this.state.user, { entries: count }))
+                })
+                .catch(err => console.log(err))    
+              }
+            this.displayFaceBox(this.calculateFaceLocation(response))
           })
-          .then(response => response.json())
-          .then(count => {
-            this.setState(Object.assign(this.state.user, { entries: count }))
-          })
-          .catch(console.log)
         }
-        this.displayFaceBox(this.calculateFaceLocation(response))
-      })
+      }) 
       .catch(err => console.log(err))  
   }
 
