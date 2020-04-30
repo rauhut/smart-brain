@@ -1,16 +1,16 @@
 /* Change automcomplete styles in WebKit */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active  {
-  -webkit-box-shadow: 0 0 0 300px #295d8a inset !important;
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0 300px #295d8a inset !important;
 }
 
 .App {
   text-align: center;
 }
 
-.center{
+.center {
   display: flex;
   justify-content: center;
 }
