@@ -6,7 +6,8 @@ class SignIn extends React.Component {
         this.state = {
             signInEmail: '',
             signInPassword: '',
-            isLoading: false
+            isLoading: false,
+            invalidLogin: false
         }
     }
     
@@ -32,6 +33,7 @@ class SignIn extends React.Component {
             if(response.ok) {
                 return response.json()
             } else {
+                this.setState({invalidLogin: true})
                 throw new Error('Something went wrong when trying to login')
             }
         })
@@ -42,7 +44,7 @@ class SignIn extends React.Component {
             }
         })
         .catch((error) => {
-            this.setState({isLoading : false})
+            this.setState({isLoading: false})
         })
     }
 
@@ -56,7 +58,7 @@ class SignIn extends React.Component {
         const { onRouteChange } = this.props
         return (
             <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 container center">
-                <main className="pa4 white-70" onKeyPress={this.onEnter}>
+                <main className="pa4 white-70 w-80" onKeyPress={this.onEnter}>
                     <div className="measure">
                         <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                         <legend className="f1 fw6 ph0 mh0">Sign In</legend>
@@ -79,6 +81,9 @@ class SignIn extends React.Component {
                                 id="password" 
                                 onChange={this.onPasswordChange}
                             />
+                        </div>
+                        <div>
+                            { this.state.invalidLogin && <span classname="dib"> Invalid login credentials, please try again </span>}
                         </div>
                         </fieldset>
                         <div className="">
